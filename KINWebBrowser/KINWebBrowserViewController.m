@@ -541,13 +541,19 @@ static void *KINWebBrowserContext = &KINWebBrowserContext;
 #pragma mark - External App Support
 
 - (BOOL)externalAppRequiredToOpenURL:(NSURL *)URL {
-    NSSet *validSchemes = [NSSet setWithArray:@[@"http", @"https"]];
-    return ![validSchemes containsObject:URL.scheme];
+    if([self.delegate respondsToSelector:@selector(webBrowser:allowOpenURLAsExternalApp:)]) {
+        return [self.delegate webBrowser:self allowOpenURLAsExternalApp:URL];
+    }else{
+        NSSet *validSchemes = [NSSet setWithArray:@[@"http", @"https"]];
+        return ![validSchemes containsObject:URL.scheme];
+    }
 }
 
 - (void)launchExternalAppWithURL:(NSURL *)URL {
-    self.URLToLaunchWithPermission = URL;
-    [self.externalAppPermissionAlertView show];
+    if (![self.externalAppPermissionAlertView isVisible]) {
+        self.URLToLaunchWithPermission = URL;
+        [self.externalAppPermissionAlertView show];
+    }
 }
 
 #pragma mark - UIAlertViewDelegate

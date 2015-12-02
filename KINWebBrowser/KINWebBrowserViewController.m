@@ -453,6 +453,10 @@ static void *KINWebBrowserContext = &KINWebBrowserContext;
         URLTitle = [self.uiWebView stringByEvaluatingJavaScriptFromString:@"document.title"];
     }
     dispatch_async(dispatch_get_main_queue(), ^{
+        if (!URLForActivityItem) {
+            return;
+        }
+        
         TUSafariActivity *safariActivity = [[TUSafariActivity alloc] init];
         ARChromeActivity *chromeActivity = [[ARChromeActivity alloc] init];
         
